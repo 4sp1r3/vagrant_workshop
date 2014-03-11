@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  IP="192.168.200.10"
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "base"
+  config.vm.network :private_network, ip: "#{IP}"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.hostname = "level2.localhost"
+
+  if Vagrant.has_plugin?("vagrant-cachier")
+    # http://fgrehm.viewdocs.io/vagrant-cachier
+    # install with: vagrant plugin install vagrant-cachier
+    # Configure cached packages to be shared between instances of the same base box.
+    # More info on the "Usage" link above
+    config.cache.scope = :box
+  end
+
+  if Vagrant.has_plugin?("vagrant-hostmanager")
+    # vagrant plugin install vagrant-hostmanager
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.ignore_private_ip = false
+    config.hostmanager.include_offline = false
+    config.hostmanager.aliases = %w(base_level2.localhost)
+  end
+
+  # Provider-specific configuration 
+  config.vm.provider :virtualbox do |vb|
+    vb.gui = false
+    vb.customize ["modifyvm", :id, "--memory", "256"]
+  end
+
+  config.vm.provision :shell, :path => "bootstrap.sh"
+  config.vm.provision :hostmanager
+
+end
