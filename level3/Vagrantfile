@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  # Enables the hostmanager plugin (to modify /etc/hosts)
+  config.hostmanager.enabled = true                                                        
+  config.hostmanager.manage_host = true                                                    
+  config.hostmanager.ignore_private_ip = false                                             
+  config.hostmanager.include_offline = true  
+
+  # Master DB
+
+  config.vm.define "master" do |conf|
+    conf.vm.box = "base"
+    conf.vm.network :private_network, ip: "192.168.200.10"
+    conf.vm.hostname = "master.localhost"
+    if Vagrant.has_plugin?("vagrant-cachier")
+      conf.cache.scope = :box
+    end
+
+    config.vm.provider :virtualbox do |vb|
+       vb.customize ["modifyvm", :id, "--memory", "256"]
+    end
+    conf.vm.provision :shell, :path => "bootstrap_master.sh"
+    conf.hostmanager.aliases = %w(master.localhost) 
+  end
+
+  # Slave DB
+
+  config.vm.define "slave" do |conf|
+    conf.vm.box = "base"
+    conf.vm.network :private_network, ip: "192.168.200.11"
+    conf.vm.hostname = "slave.localhost"
+    
+    if Vagrant.has_plugin?("vagrant-cachier")
+      conf.cache.scope = :box
+    end
+    config.vm.provider :virtualbox do |vb|
+       vb.customize ["modifyvm", :id, "--memory", "256"]
+    end
+    conf.vm.provision :shell, :path => "bootstrap_slave.sh"
+    conf.hostmanager.aliases = %w(slave.localhost) 
+  end
+
+end
+
