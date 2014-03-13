@@ -3,3 +3,5 @@
 # Update apt-cache
 
 apt-get update
+
+echo "Hello world"
