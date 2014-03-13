@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-
-#if [ -d "/opt/iatsreqs" ]; then
-#    echo "iatsreqs already exists."
-#    exit 0;
-#fi
-
 export HOME=/root
 export USER=root
 export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
-export IATSREQS_DIR=/opt/iatsreqs
 
 log() {
   /bin/echo "$(date) $*" 
