@@ -5,38 +5,6 @@ Vagrant workshop for NerdeARla 032014!
 
 This workshop has levels, starting from level 0 to level XX we will explore the features of vagrant starting with basics and ending with a complex scenario.
 
-Level 0: Installing Vagrant + Virtualbox
-----------------------------------------
-
-We have to install the latest version of:
-    * vagrant from http://www.vagrantup.com/downloads.html (this workshop can be done runned on Linux/Windows/Mac)
-    * Virtualbox and VirtualBox Extension Pack from https://www.virtualbox.org/wiki/Downloads
-
-Download/clone this repo in order to get the files/configs/etc to follow this workshop.
-    * git clone https://github.com/edux/vagrant_workshop.git
-    or
-    * wget https://github.com/edux/vagrant_workshop/archive/master.zip (don't forget to unzip it!)
-
-Note: Vagrant can use LXC as provider (https://github.com/fgrehm/vagrant-lxc), however we are using Virtualbox as LXC is obviously not available in Windows/Mac
-
-Test your Vagrant installation, open a console and run:
-
-    edux@epicfail01:~$ vagrant status
-    A Vagrant environment is required to run this command. Run `vagrant init`
-    to set one up in this directory, or change to a directory with a
-    Vagrantfile and try again.
-
-We now have vagrant installed but no Vagrant file, so move to ~/vagrant_workshop/level0 and run 'vagrant init'
-
-    edux@epicfail01:~/vagrant_workshop/level0$ vagrant init
-    A `Vagrantfile` has been placed in this directory. You are now
-    ready to `vagrant up` your first virtual environment! Please read
-    the comments in the Vagrantfile as well as documentation on
-    `vagrantup.com` for more information on using Vagrant.
-
-Let's check the Vagrantfile we created...
-
-TODO: explicacion del vagrantfile
 
 Level 1: Basics - Vagrant-101
 ----------------------------------------
@@ -154,17 +122,24 @@ To recap, the basic cycle of a vagrant vm is init,up,halt|suspend,destroy
 
 
 
-Level 2: Network config, forwarding ports, some cool plugins.
+Level 2: Network config, forwarding ports, provision, plugins and fun!
 -----------------------------------------------
 - Setup some natted ports for apache
 - use the hostmanager plugin to setup the hostname in the local pc and remote
+- provision, types of provision puppet, chef, ansible, shell script
+- vagrant-vbox-snapshot
+
+- lists of lots of plugins: https://github.com/mitchellh/vagrant/wiki/Available-Vagrant-Plugins
+- Recommended plugins:
+    -   https://github.com/pradels/vagrant-libvirt
+    -   https://github.com/WinRB/vagrant-windows (i didn't use it YET! IE??VM environment?)
+    -   https://github.com/mitchellh/vagrant-aws
+    -   https://github.com/fgrehm/vagrant-lxc (tested, works but need some hacking in the net config)
 
 
-Level 3: Provision, run provision scripts on a vm
--------------------------------------------------
-- install a simple database and import some data.
 
 
-Level 4: Multi-vm, multi-provision
+
+Level 3: Multi-vm, multi-provision
 ----------------------------------
 - install master-slave mysql with some frontend application using shares

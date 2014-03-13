@@ -12,8 +12,6 @@ export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
 export IATSREQS_DIR=/opt/iatsreqs
 
-echo "192.168.200.10  master.localhost" >> /etc/hosts
-
 log() {
   /bin/echo "$(date) $*" 
   sleep 1
@@ -39,7 +37,7 @@ log "Setting up slave"
 
 echo "
 CHANGE MASTER TO
-MASTER_HOST='master.localhost',
+MASTER_HOST='192.168.200.10',
 MASTER_USER='replication',
 MASTER_SSL=0, 
 MASTER_CONNECT_RETRY=10; " | mysql -u root
