@@ -22,12 +22,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   if Vagrant.has_plugin?("vagrant-hostmanager")
-    # vagrant plugin install vagrant-hostmanager
+    # DO NOT INSTALL IN 1.5.0 breaks everything! vagrant plugin install vagrant-hostmanager
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
     config.hostmanager.ignore_private_ip = false
     config.hostmanager.include_offline = false
     config.hostmanager.aliases = %w(base_level2.localhost)
+    config.vm.provision :hostmanager
   end
 
   # Provider-specific configuration 
@@ -37,6 +38,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :shell, :path => "bootstrap.sh"
-  config.vm.provision :hostmanager
+  
 
 end
