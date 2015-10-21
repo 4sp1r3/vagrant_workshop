@@ -1,1 +1,1 @@
-Provisioning de una app sencillita quizas un wordpress o nagios usando ansible.
+Having 2 vms, one for web and the other for db.
