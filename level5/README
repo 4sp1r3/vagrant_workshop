@@ -1,0 +1,8 @@
+$ git clone https://github.com/hashicorp/otto-getting-started.git
+$ cd otto-getting-started
+$ otto compile
+$ otto dev
+$ otto status
+$ otto dev ssh
+> bundle && rackup --host 0.0.0.0
+
