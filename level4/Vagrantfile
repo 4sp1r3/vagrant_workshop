@@ -1,0 +1,111 @@
+##################################################
+# Vagrant configuration for PCT
+##################################################
+
+# Check for required plugins
+required_plugins = %w( vagrant-hostmanager vagrant-cachier )
+required_plugins.each do |plugin|
+    system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+end
+
+Vagrant.configure("2") do |config|
+    # Global suffix for all hostnames.
+    domain_suffix = %{dev}
+
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.ignore_private_ip = false
+    config.hostmanager.include_offline = true
+
+    #############################################################
+    # Configuration for App VM
+    #############################################################
+    config.vm.define "web" do |web|
+
+        web.vm.host_name = "web.#{domain_suffix}"
+        web.vm.provider "virtualbox" do |vb|
+            vb.memory = "1024"
+        end
+        cached_addresses = {}
+        
+        web.hostmanager.ip_resolver = proc do |vm, resolving_vm|
+        if cached_addresses[vm.name].nil?
+            if hostname = (vm.ssh_info && vm.ssh_info[:host])
+                vm.communicate.execute("/sbin/ifconfig eth1 | grep 'inet addr' | tail -n 1 | egrep -o '[0-9\.]+' | head -n 1 2>&1") do |type, contents|
+                cached_addresses[vm.name] = contents.split("\n").first[/(\d+\.\d+\.\d+\.\d+)/, 1]
+            end
+            end
+        end
+        cached_addresses[vm.name]
+        end
+
+        web.vm.box = "ubuntu/trusty64"
+
+        web.vm.network "private_network", type: "dhcp"
+        web.ssh.forward_agent = true
+
+        # Ansible provisioning (you need to have ansible installed)
+        web.vm.provision "ansible" do |ansible|
+            ansible.playbook = "ansible/playbook-web.yml"
+            ansible.inventory_path = "ansible/inventories/vagrant"
+            ansible.limit = 'all'
+            ansible.extra_vars = {
+                domain_suffix: "#{domain_suffix}"
+            }
+        end
+
+        # Use NFS for shared folders for better performance
+        web.vm.synced_folder '.', '/vagrant', nfs: true
+
+        if Vagrant.has_plugin?("vagrant-cachier")
+            config.cache.scope = :box
+            config.cache.synced_folder_opts = {
+            type: :nfs,
+            mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+            }
+        end
+    end
+
+    #############################################################
+    # Configuration for MySQL VM
+    #############################################################
+    config.vm.define "db" do |db|
+        db.vm.host_name = "db.#{domain_suffix}"
+
+        db.vm.provider "virtualbox" do |vb|
+            vb.memory = "1024"
+        end
+        cached_addresses = {}
+        db.hostmanager.ip_resolver = proc do |vm, resolving_vm|
+        if cached_addresses[vm.name].nil?
+            if hostname = (vm.ssh_info && vm.ssh_info[:host])
+                vm.communicate.execute("/sbin/ifconfig eth1 | grep 'inet addr' | tail -n 1 | egrep -o '[0-9\.]+' | head -n 1 2>&1") do |type, contents|
+                cached_addresses[vm.name] = contents.split("\n").first[/(\d+\.\d+\.\d+\.\d+)/, 1]
+            end
+            end
+        end
+        cached_addresses[vm.name]
+        end
+        db.vm.box = "ubuntu/trusty64"
+
+        db.vm.network "private_network", type: "dhcp"
+        db.ssh.forward_agent = true
+
+        db.vm.provision "ansible" do |ansible|
+            ansible.playbook = "ansible/playbook-db.yml"
+            ansible.inventory_path = "ansible/inventories/vagrant"
+            ansible.limit = 'all'
+            ansible.extra_vars = {
+                domain_suffix: "#{domain_suffix}"
+            }
+        end
+        # Vagrant Cachier
+        if Vagrant.has_plugin?("vagrant-cachier")
+            config.cache.scope = :box
+            config.cache.synced_folder_opts = {
+            type: :nfs,
+            mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+            }
+        end
+    end
+end

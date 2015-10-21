@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   IP="192.168.200.10"
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/trusty64"
   config.vm.network :private_network, ip: "#{IP}"
   config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.hostname = "level2.localhost"

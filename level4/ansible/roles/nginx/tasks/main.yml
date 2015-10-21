@@ -1,0 +1,15 @@
+---
+- name: Install the nginx packages
+  apt: name=nginx state=present
+
+- name: Start the nginx service
+  service: name=nginx state=started enabled=yes
+
+- name: add nginx template
+  sudo: yes
+  template: src=nginx.app.conf.tpl dest=/etc/nginx/sites-enabled/app.conf
+  notify: restart nginx
+
+- name: restart nginx
+  action: service name=nginx state=restarted enabled=yes
+

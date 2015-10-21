@@ -1,0 +1,33 @@
+---
+- name: Add Percona repository key
+  apt_key: keyserver=keyserver.ubuntu.com id=1C4CBDCDCD2EFD2A
+
+- name: Add Percona Ubuntu repo.
+  apt_repository: repo='deb http://repo.percona.com/apt trusty main' state=present
+
+- name: Add Percona Ubuntu src-repo.
+  apt_repository: repo='deb-src http://repo.percona.com/apt trusty main' state=present
+
+
+- name: Install MySQL Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - percona-server-server-5.6
+    - percona-server-client-5.6
+    - percona-toolkit
+    - python-mysqldb
+    - sysbench
+
+- name: Update root password for all root accounts
+  mysql_user: name=root check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
+
+- name: mysql | Create databases
+  mysql_db: name={{ mysql.org_database }} state=present login_user=root login_password={{ mysql.root_password }}
+
+- name: mysql | Create users for Org schema
+  mysql_user: name={{ mysql.user }} host=% password={{ mysql.password }} priv={{ mysql.org_database_grant }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
+
+- name: Restart MySQL
+  action: service name=mysql state=restarted
+  tags: common

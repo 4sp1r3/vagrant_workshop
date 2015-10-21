@@ -1,0 +1,13 @@
+---
+- hosts: web
+  sudo: true
+  vars:
+    timezone: UTC
+  vars_files:
+    - vars/common.yml
+    - [ "vars/apachephp.yml", "vars/ws_defaults.yml" ]
+    - vars/ca_certificates.yml
+    - vars/pct_agent.yml
+  roles:
+    - init
+    - nginx

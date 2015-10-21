@@ -1,0 +1,6 @@
+mysql:
+    root_password:
+    user: vagrant
+    password: vagrant
+    org_database: dev_o1
+    org_database_grant: dev_o1

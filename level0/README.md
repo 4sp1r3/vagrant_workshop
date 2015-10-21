@@ -21,7 +21,7 @@ Test your Vagrant installation, open a console and run:
 
 We now have vagrant installed but no Vagrant file, run 'vagrant init'
 
-    edux@epicfail01:~/vagrant_workshop/level0$ vagrant init
+    edux@epicfail01:~/vagrant_workshop/level0$ vagrant init ubuntu/trusty64
     A `Vagrantfile` has been placed in this directory. You are now
     ready to `vagrant up` your first virtual environment! Please read
     the comments in the Vagrantfile as well as documentation on

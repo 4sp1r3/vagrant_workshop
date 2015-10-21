@@ -1,0 +1,11 @@
+---
+- hosts: db
+  sudo: true
+  vars:
+    timezone: UTC
+  vars_files:
+    - vars/common.yml
+    - vars/mysql.yml
+  roles:
+    - init
+    - percona-server

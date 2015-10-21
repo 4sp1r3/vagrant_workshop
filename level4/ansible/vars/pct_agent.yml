@@ -1,0 +1,8 @@
+---
+pct_agent_bin: /usr/local/percona/percona-agent/bin/percona-agent
+pct_agent_api_key: 5ece60bde7663364824fc3215ad40a50
+pct_agent_host: api
+pct_agent_install_url: https://cloud.percona.com/install
+
+
+#curl -s https://cloud.percona.com/install  | bash /dev/stdin -api-key="5ece60bde7663364824fc3215ad40a50"  --api-host="api.dev" -interactive=false

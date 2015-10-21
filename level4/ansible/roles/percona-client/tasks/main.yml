@@ -1,0 +1,16 @@
+---
+- name: Add Percona repository key
+  apt_key: keyserver=keyserver.ubuntu.com id=1C4CBDCDCD2EFD2A
+
+- name: Add Percona Ubuntu repo.
+  apt_repository: repo='deb http://repo.percona.com/apt trusty main' state=present
+
+- name: Add Percona Ubuntu src-repo.
+  apt_repository: repo='deb-src http://repo.percona.com/apt trusty main' state=present
+
+
+- name: Install MySQL Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - percona-server-client-5.6

@@ -1,0 +1,5 @@
+[db]
+db.dev ansible_ssh_user=vagrant 
+
+[web]
+web.dev ansible_ssh_user=vagrant database_host=db 
