@@ -23,7 +23,6 @@ if [ ! -f /tmp/all-databases.sql.gz ]; then
     sed -i 's/#log_bin/log_bin/' /etc/mysql/my.cnf
     sed -i 's/bind-address/#bind-address/' /etc/mysql/my.cnf
     
-
     service mysql restart
 
     mysql <<EOB
